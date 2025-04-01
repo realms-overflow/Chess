@@ -1,6 +1,0 @@
-In order to run the programm on your IDE, you have to download the following libraries. 
-You can easily copy and paste the following lines to terminal one by one:
-
-pip install pygame
-
-pip install stockfish

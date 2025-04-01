@@ -61,13 +61,13 @@ for ordinate in range(
 coordinates_locations = dict(zip(coordinates, locations))
 
 def reverse_locations():
-    for ordinate1 in range(
-        int(0), int(SIZE_CHESSBOARD[0]), int(SIZE_PIECES[0])
-    ):
-        for apsis1 in range(0, int(SIZE_CHESSBOARD[0]), int(SIZE_PIECES[0])):
-            locations.append(tuple((apsis, ordinate)))
-    coordinates_locations1 = dict(zip(coordinates, locations))
-    return coordinates_locations1
+    locations1= [
+        (apsis1, ordinate1)
+        for ordinate1 in range(0,600,75)
+        for apsis1 in range(0,600,75)
+    ]
+
+    return dict(zip(coordinates, locations1))
 
 
 def show_checkmate_message(screen,winner):

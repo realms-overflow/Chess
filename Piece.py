@@ -294,11 +294,7 @@ class Piece:
         # Split the FEN into its components
         parts = fen.split()
         board_layout = parts[0]
-        #turn = parts[1]
         castling_rights = parts[2]
-        en_passant = parts[3]
-        halfmove_clock = parts[4]
-        fullmove_number = parts[5]
 
         # Split the board layout into rows
         rows = board_layout.split('/')
@@ -318,23 +314,11 @@ class Piece:
         else:
             raise ValueError("Invalid axis value. Use 'horizontal', 'vertical', or 'all'.")
 
-        # Process castling rights (reverse KQkq if "all" or "vertical" flips happen)
-        if axis in ['vertical', 'all']:
-            castling_rights = castling_rights.translate(str.maketrans('KQkq', 'kqKQ'))
-
-        # Process en passant (adjust row numbers if "vertical" or "all")
-        if en_passant != '-':
-            file = en_passant[0]
-            rank = en_passant[1]
-            if axis in ['vertical', 'all']:
-                new_rank = str(9 - int(rank))  # Rows are flipped vertically
-                en_passant = file + new_rank
-
         # Join the transformed rows back into a string
         new_board_layout = '/'.join(rows)
 
         # Reconstruct the new FEN
-        new_fen = f"{new_board_layout} b {castling_rights} {en_passant} {halfmove_clock} {fullmove_number}"
+        new_fen = f"{new_board_layout} w {castling_rights} - 0 1"
         return new_fen
 
     @staticmethod
@@ -444,6 +428,10 @@ class Piece:
 
     @staticmethod
     def stalemate(color):
+        from King import King
+        king=King.white_king_instance if color=="white" else King.black_king_instance
+        if king.threatened:
+            return False
         for piece in Piece.current_pieces_list:
                 if piece.color==color:
                     if piece.get_valid_moves():

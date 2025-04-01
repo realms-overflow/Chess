@@ -31,7 +31,7 @@ dragging = False
 selected_piece = None
 offset_x = offset_y = 0
 turn="white"
-best_move_for_black=None
+best_move=None
 AI_selected_piece=None
 AI_next_move=None
 
@@ -56,10 +56,11 @@ while running:
 
 
     # AI Move
-    if turn =="black":
+    if turn !=Game_settings.PLAYER_COLOR:
+        does_not_change_2_square_Flag = False
         pygame.time.delay(500)
-        best_move_for_black = AI.get_the_best_move(Piece.get_fen(turn))
-        AI_selected_piece_n_next_move = AI.get_the_piece_and_destination_location_by_move(best_move_for_black)
+        best_move = AI.get_the_best_move(Piece.get_fen(turn)) if turn == "black" else AI.get_the_best_move(Piece.mirror_fen(Piece.get_fen(turn)))
+        AI_selected_piece_n_next_move = AI.get_the_piece_and_destination_location_by_move(best_move)
         AI_selected_piece = AI_selected_piece_n_next_move[0]
         AI_next_move = AI_selected_piece_n_next_move[1]
         AI_selected_piece.current_Location = AI_next_move
@@ -88,7 +89,7 @@ while running:
         AI_selected_piece.check_threatening_king()
 
         # King becomes red by discovery check
-        if not AI_selected_piece.threads_the_king and not do_not_change_2_square_Flag:
+        if not AI_selected_piece.threads_the_king and not does_not_change_2_square_Flag:
             for piece in Piece.current_pieces_list:
                 enemy_king = King.white_king_instance if piece.color == "black" else King.black_king_instance
                 if enemy_king.current_Location in piece.get_valid_moves():
@@ -153,7 +154,7 @@ while running:
         turn = "black" if turn == "white" else "white"
 
         # Reset En Passant flag for all pawns, except the one that just moved two squares
-        if not do_not_change_2_square_Flag:
+        if not does_not_change_2_square_Flag:
             for piece in Piece.current_pieces_list:
                 if isinstance(piece, Pawn):
                     if piece != AI_selected_piece:
@@ -175,8 +176,7 @@ while running:
                     rect = piece.image_black.get_rect(topleft=piece.current_Location)
                 if rect.collidepoint(mouse_pos):
                     dragging = True
-                    selected_piece = piece if piece.color=="white" else None
-                    #selected_piece=piece if piece.color==turn else None
+                    selected_piece = piece if piece.color==Game_settings.PLAYER_COLOR else None
                     if selected_piece:
                         valid_moves=selected_piece.get_valid_moves()
                         previous_Location=piece.current_Location
@@ -195,7 +195,7 @@ while running:
             king_becomes_red_after_discovery_check = False
             defended=False
             promoted_to_queen=False
-            do_not_change_2_square_Flag=False
+            does_not_change_2_square_Flag=False
             capture_Flag=False
             on_same_color_piece = False
             piece_shielding = False
@@ -284,10 +284,10 @@ while running:
                 # Return to previous position
                 if king_still_in_check or piece_shielding or on_same_color_piece or defended:
                     selected_piece.current_Location = previous_Location
-                    do_not_change_2_square_Flag=True
+                    does_not_change_2_square_Flag=True
 
                 # King becomes red by discovery check
-                if not selected_piece.threads_the_king and not do_not_change_2_square_Flag:
+                if not selected_piece.threads_the_king and not does_not_change_2_square_Flag:
                     for piece in Piece.current_pieces_list:
                         enemy_king = King.white_king_instance if piece.color == "black" else King.black_king_instance
                         if enemy_king.current_Location in piece.get_valid_moves():
@@ -354,7 +354,7 @@ while running:
 
 
                 # Reset En Passant flag for all pawns, except the one that just moved two squares
-                if not  do_not_change_2_square_Flag:
+                if not  does_not_change_2_square_Flag:
                     for piece in Piece.current_pieces_list:
                         if isinstance(piece, Pawn):
                             if piece != selected_piece:
