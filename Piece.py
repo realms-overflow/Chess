@@ -442,6 +442,16 @@ class Piece:
                     screen.blit(piece.image_white if piece.color == "white" else piece.image_black,
                                 piece.current_Location)
 
+    @staticmethod
+    def stalemate(color):
+        for piece in Piece.current_pieces_list:
+                if piece.color==color:
+                    if piece.get_valid_moves():
+                        return False
+        return True
+
+
+
 
 
 

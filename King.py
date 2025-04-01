@@ -147,13 +147,13 @@ class King(Piece):
             if piece.color != self.color:  # ✅ Only check enemy pieces
                 for piece1 in piece_list:
                     piece1.get_valid_moves()
-                print(f"king flee location {self.valid_moves}")
+                #print(f"king flee location {self.valid_moves}")
                 if self.current_Location in piece.get_valid_moves():
-                    print(piece.current_Location)
-                    print(piece)
-                    print(piece.defended)
+                   # print(piece.current_Location)
+                   # print(piece)
+                   # print(piece.defended)
                     print(self.get_valid_moves())
-                    print(self.threatened)
+                   # print(self.threatened)
                     return True  # ✅ The king is in check
         return False
 
@@ -195,7 +195,7 @@ class King(Piece):
                        temp_piece_list.append(piece1)
                     piece.current_Location = original_pos
                     if not king_still_in_check:
-                        print(f"No check after moving this piece{piece},location{piece.current_Location},valid moves={piece.valid_moves}")
+                       # print(f"No check after moving this piece{piece},location{piece.current_Location},valid moves={piece.valid_moves}")
                         return False  # The king can escape, so no checkmate
 
                     piece_removed=False

@@ -1,5 +1,4 @@
 import sys,pygame
-
 import Game_settings
 import Queen
 from Game_settings import show_menu
@@ -25,6 +24,7 @@ menu_open = True
 king_becomes_red_after_discovery_check = False
 winner=None
 checkmated=False
+stalemated=False
 valid_moves=None
 running = True
 dragging = False
@@ -56,7 +56,7 @@ while running:
 
 
     # AI Move
-    if turn == "black":
+    if turn =="black":
         pygame.time.delay(500)
         best_move_for_black = AI.get_the_best_move(Piece.get_fen(turn))
         AI_selected_piece_n_next_move = AI.get_the_piece_and_destination_location_by_move(best_move_for_black)
@@ -114,10 +114,16 @@ while running:
                 Piece.current_pieces_list.remove(AI_selected_piece.en_passant_taken_piece)
                 break
 
-        # Update Castling Images
+        # Update Castling Mechanics
 
         Piece.update_short_castling(screen)
         Piece.update_long_castling(screen)
+
+        # Check moving 2 squares
+        if isinstance(AI_selected_piece, Pawn) and abs(
+                AI_selected_piece.current_Location[1] - AI_selected_piece.first_location[
+                    1]) == 150:  # If pawn moved two squares
+            AI_selected_piece.just_moved_two_squares = True
 
 
         # Update if castled
@@ -135,10 +141,23 @@ while running:
         elif King.is_checkmate(King.white_king_instance):
             winner = "black"
             checkmated = True
+        # If stalemate
+        if Piece.stalemate("white"):
+            stalemated = True
+        if Piece.stalemate("black"):
+            stalemated = True
+
 
         # Change turn
         Game_settings.move_sound.play()
-        turn = "white"
+        turn = "black" if turn == "white" else "white"
+
+        # Reset En Passant flag for all pawns, except the one that just moved two squares
+        if not do_not_change_2_square_Flag:
+            for piece in Piece.current_pieces_list:
+                if isinstance(piece, Pawn):
+                    if piece != AI_selected_piece:
+                        piece.just_moved_two_squares = False
 
     for event in pygame.event.get():
 
@@ -316,7 +335,7 @@ while running:
                 if isinstance(selected_piece, Pawn) and abs(
                         selected_piece.current_Location[1] - selected_piece.first_location[
                             1]) == 150:  # If pawn moved two squares
-                    selected_piece.just_moved_two_squares = True  #  Set it to True
+                    selected_piece.just_moved_two_squares = True
 
 
 
@@ -355,6 +374,12 @@ while running:
                     winner="black"
                     checkmated=True
 
+                # If stalemate
+                if Piece.stalemate("white"):
+                    stalemated = True
+                if Piece.stalemate("black"):
+                    stalemated=True
+
 
 
 
@@ -388,7 +413,17 @@ while running:
         menu_open=True
         checkmated=False
         booted_up=False
+        turn="white"
         Piece.current_pieces_list=[]
+    if stalemated:
+        Game_settings.checkmate_sound.play()
+        pygame.time.delay(3000)
+        Game_settings.show_stalemate_message(screen)
+        menu_open = True
+        stalemated=False
+        booted_up = False
+        turn = "white"
+        Piece.current_pieces_list = []
 
 
 

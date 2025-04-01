@@ -13,6 +13,7 @@ else:
     stockfish_path = "stockfish_engine/Linux/stockfish-android-armv8"
 
 stockfish = Stockfish(path=stockfish_path)
+stockfish.update_engine_parameters({ "UCI_Elo": 500,})
 stockfish.set_skill_level(AI_difficulty)
 ai_cache = {}
 coordinates_locations_reversed=reverse_locations()

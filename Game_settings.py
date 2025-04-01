@@ -32,6 +32,7 @@ black_button_rect=black_button.get_rect(topleft=(410,200))
 
 Victory_Image = pygame.transform.scale(pygame.image.load("Images/Victory.png"), size=SIZE_CHESSBOARD)
 Defeat_Image = pygame.transform.scale(pygame.image.load("Images/Defeat.png"), size=SIZE_CHESSBOARD)
+Stalemate_Image = pygame.transform.scale(pygame.image.load("Images/Stalemate.png"), size=SIZE_CHESSBOARD)
 FPS = int(60)
 AI_difficulty=10
 selected_button_for_difficulty = "green"
@@ -39,7 +40,7 @@ selected_button_for_color = "white"
 
 
 
-# Coordinates and Locations
+# Coordinates and Locationss
 
 
 variables = ["A", "B", "C", "D", "E", "F", "G", "H"]
@@ -80,6 +81,12 @@ def show_checkmate_message(screen,winner):
     pygame.display.update()  # Update display
     pygame.time.delay(7000)
 
+def show_stalemate_message(screen):
+    screen.blit(Stalemate_Image,(0,0))
+    pygame.display.update()  # Update display
+    pygame.time.delay(7000)
+
+
 def show_menu(screen):
     global AI_difficulty,selected_button_for_difficulty,PLAYER_COLOR,selected_button_for_color
 
@@ -89,7 +96,7 @@ def show_menu(screen):
             quit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if blue_button_rect.collidepoint(event.pos):
-                AI_difficulty=1
+                AI_difficulty=0
                 selected_button_for_difficulty= "blue"
             elif green_button_rect.collidepoint(event.pos):
                 AI_difficulty=10
