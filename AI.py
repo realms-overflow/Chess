@@ -33,8 +33,8 @@ def get_the_best_move(fen):
 def get_the_piece_and_destination_location_by_move(move):
     current_pos=move[0:2].upper()
     next_pos=move[2:4].upper()
-    current_location=coordinates_locations[current_pos] if PLAYER_COLOR=="white" else coordinates_locations_reversed[current_pos]
-    next_location=coordinates_locations[next_pos] if PLAYER_COLOR=="white" else coordinates_locations_reversed[next_pos]
+    current_location=coordinates_locations[current_pos] if get_player_color()=="white" else coordinates_locations_reversed[current_pos]
+    next_location=coordinates_locations[next_pos] if get_player_color()=="white" else coordinates_locations_reversed[next_pos]
     for piece in Piece.current_pieces_list:
         if piece.current_Location==current_location:
             return [piece,next_location]

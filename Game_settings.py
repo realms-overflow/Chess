@@ -2,11 +2,20 @@ import pygame
 
 # Constants
 pygame.init()
-
 PLAYER_COLOR="white"
+
+def get_player_color():
+    return PLAYER_COLOR
+
+def set_player_color(color):
+    global PLAYER_COLOR
+    PLAYER_COLOR = color
+
 SIZE_CHESSBOARD = (600, 600)
 SIZE_PIECES = (SIZE_CHESSBOARD[0] / 8, SIZE_CHESSBOARD[0] / 8)
-THEME = pygame.transform.scale(pygame.image.load("Images/blue_board.png"), SIZE_CHESSBOARD)
+THEME_WHITE = pygame.transform.scale(pygame.image.load("Images/blue_board_white.png"), SIZE_CHESSBOARD)
+THEME_BLACK= pygame.transform.scale(pygame.image.load("Images/blue_board_black.png"), SIZE_CHESSBOARD)
+
 Menu_Image = pygame.transform.scale(pygame.image.load("Images/menu_image.png"), size=SIZE_CHESSBOARD)
 
 blue_button= pygame.transform.scale(pygame.image.load("Images/blue_button.png"), (90, 50))
@@ -71,7 +80,7 @@ def reverse_locations():
 
 
 def show_checkmate_message(screen,winner):
-    if PLAYER_COLOR == winner :
+    if get_player_color() == winner :
         victory_sound.play()
         screen.blit(Victory_Image,(0,0))
     else:
@@ -88,7 +97,7 @@ def show_stalemate_message(screen):
 
 
 def show_menu(screen):
-    global AI_difficulty,selected_button_for_difficulty,PLAYER_COLOR,selected_button_for_color
+    global AI_difficulty,selected_button_for_difficulty,selected_button_for_color
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -105,10 +114,10 @@ def show_menu(screen):
                 AI_difficulty=20
                 selected_button_for_difficulty= "red"
             elif white_button_rect.collidepoint(event.pos):
-                PLAYER_COLOR="white"
+                set_player_color("white")
                 selected_button_for_color= "white"
             elif black_button_rect.collidepoint(event.pos):
-                PLAYER_COLOR="black"
+                set_player_color("black")
                 selected_button_for_color= "black"
             elif play_button_rect.collidepoint(event.pos):
                 return False

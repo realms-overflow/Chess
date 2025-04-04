@@ -3,6 +3,7 @@ import pygame
 import Game_settings
 
 
+
 class Piece:
     castling_rights = "KQkq"
     total_check_count_in_turn = 0
@@ -110,7 +111,7 @@ class Piece:
         # Create instances of each piece subclass
         pieces = [Rook(), Pawn(), King(), Queen(), Bishop(), Knight()]
 
-        if Game_settings.PLAYER_COLOR=="white":
+        if Game_settings.get_player_color()=="white":
             for piece in pieces:
                 for pos in piece.starting_pos_white:
                     new_piece = piece.__class__()
@@ -248,13 +249,14 @@ class Piece:
                     break
 
 
-
+        #Castling rights update
         if King.white_king_instance.has_moved:
             cls.castling_rights = cls.castling_rights.replace("K", "")
             cls.castling_rights = cls.castling_rights.replace("Q", "")
         if King.black_king_instance.has_moved:
             cls.castling_rights = cls.castling_rights.replace("k", "")
             cls.castling_rights = cls.castling_rights.replace("q", "")
+
 
         fen = f"{fen_board} {turn_char} {cls.castling_rights} - 0 1"
         return fen
@@ -327,7 +329,7 @@ class Piece:
         from Rook import Rook
 
         # Player color: White / Up Left Black
-        if King.black_king_instance.current_Location == (150, 0) and Game_settings.PLAYER_COLOR == "white":
+        if King.black_king_instance.current_Location == (150, 0) and Game_settings.get_player_color() == "white":
             for piece in Piece.current_pieces_list:
                 if isinstance(piece,
                               Rook) and piece.color == "black" and piece.castling_long and not King.black_king_instance.has_moved:
@@ -339,7 +341,7 @@ class Piece:
 
         # Player color: White / Up Left White
         if King.white_king_instance.current_Location == (
-                150, 525) and Game_settings.PLAYER_COLOR == "white":
+                150, 525) and Game_settings.get_player_color() == "white":
             for piece in Piece.current_pieces_list:
                 if isinstance(piece,
                               Rook) and piece.color == "white" and piece.castling_long and not King.white_king_instance.has_moved:
@@ -351,7 +353,7 @@ class Piece:
 
         # Player color: Black / For Up Left White
         if King.white_king_instance.current_Location == (
-                150, 0) and Game_settings.PLAYER_COLOR == "black":
+                150, 0) and Game_settings.get_player_color() == "black":
             for piece in Piece.current_pieces_list:
                 if isinstance(piece,
                               Rook) and piece.color == "white" and piece.castling_long and not King.white_king_instance.has_moved:
@@ -364,7 +366,7 @@ class Piece:
 
         # Player color: Black / For Bottom Left Black
         if King.black_king_instance.current_Location == (
-                150, 525) and Game_settings.PLAYER_COLOR == "black":
+                150, 525) and Game_settings.get_player_color() == "black":
             for piece in Piece.current_pieces_list:
                 if isinstance(piece,
                               Rook) and piece.color == "black" and piece.castling_long and not King.black_king_instance.has_moved:
@@ -382,7 +384,7 @@ class Piece:
 
         # Player color: White / For Bottom Right
         if (King.white_king_instance.current_Location == (450, 525) and
-                Game_settings.PLAYER_COLOR == "white"):
+                Game_settings.get_player_color() == "white"):
             for piece in Piece.current_pieces_list:
                 if isinstance(piece,
                               Rook) and piece.color == "white" and piece.castling_short and not King.white_king_instance.has_moved:
@@ -393,7 +395,7 @@ class Piece:
                                 piece.current_Location)
 
         # Player color: Black / For Bottom Right
-        if King.black_king_instance.current_Location == (450, 525) and Game_settings.PLAYER_COLOR == "black":
+        if King.black_king_instance.current_Location == (450, 525) and Game_settings.get_player_color() == "black":
             for piece in Piece.current_pieces_list:
                 if isinstance(piece,
                               Rook) and piece.color == "black" and piece.castling_short and not King.black_king_instance.has_moved:
@@ -405,7 +407,7 @@ class Piece:
 
         # Player color: Black / For Up Right
         if (King.black_king_instance.current_Location == (450, 0) and
-                Game_settings.PLAYER_COLOR == "white"):
+                Game_settings.get_player_color() == "white"):
             for piece in Piece.current_pieces_list:
                 if isinstance(piece,
                               Rook) and piece.color == "black" and piece.castling_short and not King.black_king_instance.has_moved:
@@ -416,7 +418,7 @@ class Piece:
                                 piece.current_Location)
 
         # Player color: White / For Up Right
-        if King.white_king_instance.current_Location == (450, 0) and Game_settings.PLAYER_COLOR == "black":
+        if King.white_king_instance.current_Location == (450, 0) and Game_settings.get_player_color() == "black":
             for piece in Piece.current_pieces_list:
                 if isinstance(piece,
                               Rook) and piece.color == "white" and piece.castling_short and not King.white_king_instance.has_moved:

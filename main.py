@@ -56,7 +56,7 @@ while running:
 
 
     # AI Move
-    if turn !=Game_settings.PLAYER_COLOR:
+    if turn !=Game_settings.get_player_color():
         does_not_change_2_square_Flag = False
         pygame.time.delay(500)
         best_move = AI.get_the_best_move(Piece.get_fen(turn)) if turn == "black" else AI.get_the_best_move(Piece.mirror_fen(Piece.get_fen(turn)))
@@ -67,13 +67,13 @@ while running:
 
         # Check if pawn reached the promotion rank
         if isinstance(AI_selected_piece, Pawn):
-            if ((AI_selected_piece.color == "white" and Game_settings.PLAYER_COLOR == "white" and
+            if ((AI_selected_piece.color == "white" and Game_settings.get_player_color() == "white" and
                  AI_selected_piece.current_Location[1] == 0) or (
-                        AI_selected_piece.color == "black" and Game_settings.PLAYER_COLOR == "black" and
+                        AI_selected_piece.color == "black" and Game_settings.get_player_color() == "black" and
                         AI_selected_piece.current_Location[1] == 0)) or \
-                    (AI_selected_piece.color == "black" and Game_settings.PLAYER_COLOR == "white" and
+                    (AI_selected_piece.color == "black" and Game_settings.get_player_color() == "white" and
                      AI_selected_piece.current_Location[1] == 525) or (
-                    AI_selected_piece.color == "white" and Game_settings.PLAYER_COLOR == "black" and
+                    AI_selected_piece.color == "white" and Game_settings.get_player_color() == "black" and
                     AI_selected_piece.current_Location[1] == 525):
                 # Create a new queen in the pawn's place
                 promoted_queen = Queen.Queen()
@@ -176,7 +176,7 @@ while running:
                     rect = piece.image_black.get_rect(topleft=piece.current_Location)
                 if rect.collidepoint(mouse_pos):
                     dragging = True
-                    selected_piece = piece if piece.color==Game_settings.PLAYER_COLOR else None
+                    selected_piece = piece if piece.color==Game_settings.get_player_color() else None
                     if selected_piece:
                         valid_moves=selected_piece.get_valid_moves()
                         previous_Location=piece.current_Location
@@ -209,8 +209,8 @@ while running:
 
                 # Check if pawn reached the promotion rank
                 if isinstance(selected_piece, Pawn) and selected_piece.current_Location in valid_moves:
-                    if ((selected_piece.color == "white" and Game_settings.PLAYER_COLOR=="white" and selected_piece.current_Location[1] == 0) or (selected_piece.color == "black" and Game_settings.PLAYER_COLOR=="black" and selected_piece.current_Location[1] == 0)) or \
-                       (selected_piece.color == "black" and  Game_settings.PLAYER_COLOR=="white" and selected_piece.current_Location[1] == 525) or (selected_piece.color == "white" and  Game_settings.PLAYER_COLOR=="black" and selected_piece.current_Location[1] == 525):
+                    if ((selected_piece.color == "white" and Game_settings.get_player_color()=="white" and selected_piece.current_Location[1] == 0) or (selected_piece.color == "black" and Game_settings.get_player_color()=="black" and selected_piece.current_Location[1] == 0)) or \
+                       (selected_piece.color == "black" and  Game_settings.get_player_color()=="white" and selected_piece.current_Location[1] == 525) or (selected_piece.color == "white" and  Game_settings.get_player_color()=="black" and selected_piece.current_Location[1] == 525):
                         # Create a new queen in the pawn's place
                         promoted_queen = Queen.Queen()
                         promoted_queen.color=selected_piece.color
@@ -389,7 +389,7 @@ while running:
 
 
 
-    screen.blit(Game_settings.THEME, (0, 0))
+    screen.blit(Game_settings.THEME_WHITE, (0, 0)) if Game_settings.get_player_color()=="white" else screen.blit(Game_settings.THEME_BLACK,(0, 0))
 
     # Update Piece Images
     for piece in Piece.current_pieces_list:

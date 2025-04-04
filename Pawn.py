@@ -10,7 +10,7 @@ class Pawn(Piece):
 
         self.just_moved_two_squares = False
         self.first_location=None
-        self.en_passant_done=False
+        self.en_passant_possible=False
         self.en_passant_taken_piece=None
         self.en_passant_move_location=None
         self.piece_type="pawn"
@@ -25,7 +25,7 @@ class Pawn(Piece):
         occupied_positions = {piece.current_Location: piece for piece in Piece.current_pieces_list}
 
         # Determine direction based on color
-        direction = -75 if self.color == "white" and Game_settings.PLAYER_COLOR=="white" or self.color == "black" and Game_settings.PLAYER_COLOR=="black"else 75
+        direction = -75 if self.color == "white" and Game_settings.get_player_color()=="white" or self.color == "black" and Game_settings.get_player_color()=="black"else 75
 
         # Forward move (one square)
         forward_one = (x, y + direction)
@@ -33,7 +33,7 @@ class Pawn(Piece):
             valid_moves.append(forward_one)
 
             # Forward move (two squares, only if in starting position)
-            starting_row = 450 if self.color == "white" and Game_settings.PLAYER_COLOR=="white" or self.color == "black" and Game_settings.PLAYER_COLOR=="black" else 75  # 2nd row for white, 7th row for black
+            starting_row = 450 if self.color == "white" and Game_settings.get_player_color()=="white" or self.color == "black" and Game_settings.get_player_color()=="black" else 75  # 2nd row for white, 7th row for black
             forward_two = (x, y + 2 * direction)
             if y == starting_row and forward_two not in occupied_positions:
                 valid_moves.append(forward_two)
@@ -56,7 +56,7 @@ class Pawn(Piece):
                 piece = next(piece for piece in Piece.current_pieces_list if piece.current_Location == en_passant_pos)
                 if isinstance(piece, Pawn) and piece.color != self.color and piece.just_moved_two_squares:
                     self.en_passant_taken_piece=piece
-                    self.en_passant_done=True
+                    self.en_passant_possible=True
                     self.en_passant_move_location=(x + dx, y + direction)
                     valid_moves.append((x + dx, y + direction))  # Move to capture en passant
         return valid_moves

@@ -152,7 +152,7 @@ class King(Piece):
                    # print(piece.current_Location)
                    # print(piece)
                    # print(piece.defended)
-                    print(self.get_valid_moves())
+                    self.get_valid_moves()
                    # print(self.threatened)
                     return True  # ✅ The king is in check
         return False
