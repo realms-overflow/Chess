@@ -1,8 +1,22 @@
-import sys
+import sys,subprocess
 
 from Game_settings import *
 from stockfish import Stockfish
 from Piece import Piece
+
+class QuietStockfish(Stockfish):
+    def __init__(self, path):
+        super().__init__(path)
+        if sys.platform=="win32":
+            self._stockfish = subprocess.Popen(
+                [path],
+                universal_newlines=True,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                creationflags=subprocess.CREATE_NO_WINDOW
+        )
+
 
 
 if sys.platform == "win32":
@@ -12,7 +26,7 @@ elif sys.platform == "darwin":
 else:
     stockfish_path = "stockfish_engine/Linux/stockfish-android-armv8"
 
-stockfish = Stockfish(path=stockfish_path)
+stockfish = QuietStockfish(path=stockfish_path)
 stockfish.update_engine_parameters({ "UCI_Elo": 500,})
 stockfish.set_skill_level(AI_difficulty)
 ai_cache = {}

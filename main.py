@@ -54,9 +54,9 @@ while running:
 
 
 
-
     # AI Move
     if turn !=Game_settings.get_player_color():
+
         does_not_change_2_square_Flag = False
         pygame.time.delay(500)
         best_move = AI.get_the_best_move(Piece.get_fen(turn)) if turn == "black" else AI.get_the_best_move(Piece.mirror_fen(Piece.get_fen(turn)))
