@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -211,6 +211,37 @@ void* aligned_large_pages_alloc(size_t allocSize) {
 }
 
 #endif
+
+bool has_large_pages() {
+
+#if defined(_WIN32)
+
+    constexpr size_t page_size = 2 * 1024 * 1024;  // 2MB page size assumed
+    void*            mem       = aligned_large_pages_alloc_windows(page_size);
+    if (mem == nullptr)
+    {
+        return false;
+    }
+    else
+    {
+        aligned_large_pages_free(mem);
+        return true;
+    }
+
+#elif defined(__linux__)
+
+    #if defined(MADV_HUGEPAGE)
+    return true;
+    #else
+    return false;
+    #endif
+
+#else
+
+    return false;
+
+#endif
+}
 
 
 // aligned_large_pages_free() will free the previously memory allocated

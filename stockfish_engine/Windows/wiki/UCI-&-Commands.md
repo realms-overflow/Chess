@@ -22,29 +22,29 @@ If no `uciok` is sent within a certain time period, the engine task will be kill
 
   ```
   > uci
-    id name Stockfish 16.1
-    id author the Stockfish developers (see AUTHORS file)
+  id name Stockfish 16.1
+  id author the Stockfish developers (see AUTHORS file)
 
-    option name Debug Log File type string default
-    option name Threads type spin default 1 min 1 max 1024
-    option name Hash type spin default 16 min 1 max 33554432
-    option name Clear Hash type button
-    option name Ponder type check default false
-    option name MultiPV type spin default 1 min 1 max 256
-    option name Skill Level type spin default 20 min 0 max 20
-    option name Move Overhead type spin default 10 min 0 max 5000
-    option name nodestime type spin default 0 min 0 max 10000
-    option name UCI_Chess960 type check default false
-    option name UCI_LimitStrength type check default false
-    option name UCI_Elo type spin default 1320 min 1320 max 3190
-    option name UCI_ShowWDL type check default false
-    option name SyzygyPath type string default <empty>
-    option name SyzygyProbeDepth type spin default 1 min 1 max 100
-    option name Syzygy50MoveRule type check default true
-    option name SyzygyProbeLimit type spin default 7 min 0 max 7
-    option name EvalFile type string default nn-b1a57edbea57.nnue
-    option name EvalFileSmall type string default nn-baff1ede1f90.nnue
-    uciok
+  option name Debug Log File type string default
+  option name Threads type spin default 1 min 1 max 1024
+  option name Hash type spin default 16 min 1 max 33554432
+  option name Clear Hash type button
+  option name Ponder type check default false
+  option name MultiPV type spin default 1 min 1 max 256
+  option name Skill Level type spin default 20 min 0 max 20
+  option name Move Overhead type spin default 10 min 0 max 5000
+  option name nodestime type spin default 0 min 0 max 10000
+  option name UCI_Chess960 type check default false
+  option name UCI_LimitStrength type check default false
+  option name UCI_Elo type spin default 1320 min 1320 max 3190
+  option name UCI_ShowWDL type check default false
+  option name SyzygyPath type string default <empty>
+  option name SyzygyProbeDepth type spin default 1 min 1 max 100
+  option name Syzygy50MoveRule type check default true
+  option name SyzygyProbeLimit type spin default 7 min 0 max 7
+  option name EvalFile type string default nn-b1a57edbea57.nnue
+  option name EvalFileSmall type string default nn-baff1ede1f90.nnue
+  uciok
   ```
 </details>
 
@@ -65,80 +65,139 @@ Examples:
 
 List of options:
 
-  * `Threads` `type spin default 1 min 1 max 1024`  
+  * #### `Threads`
+
+    `type spin default 1 min 1 max 1024`
+
     The number of CPU threads used for searching a position. For best performance, set this equal to the number of CPU cores available.
 
-  * `Hash` `type spin default 16 min 1 max 33554432`  
+  * #### `Hash`
+
+    `type spin default 16 min 1 max 33554432`
+
     The size of the hash table in MB. It is recommended to set Hash after setting Threads.
 
-  * `MultiPV` `type spin default 1 min 1 max 500`  
+  * #### `MultiPV`
+
+    `type spin default 1 min 1 max 500`
+
     Output the N best lines (principal variations, PVs) when searching.
     Leave at 1 for the best performance.
 
-  * `NumaPolicy` `type string default auto`
-    Bind threads to ensure execution on a specific NUMA node. 
-    Improves performance on systems with multiple CPUs or CPUs with multiple NUMA domains. 
-    The following values can be used:
-       * `system` - gathers NUMA node information from the system (including affinities preset by the user or the GUI), for each thread binds it to a single NUMA node
-       * `none` - assumes there is 1 NUMA node, never binds threads
-       * `auto` - this is the default value, automatically selects `system` or `none` depending on the number of set threads and available NUMA nodes. Will only select `system` when the number of threads reaches a system-dependent threshold.
-       * `hardware` - gathers NUMA node information for the underlying hardware (disregards and overrides affinities preset by the user or the GUI), for each thread binds it to a single NUMA node
-       * `[[custom]]` - specify precisely the available CPUs per numa domain. ':' separates numa nodes; ',' separates cpu indices; supports "first-last" range syntax for cpu indices, for example `0-15,32-47:16-31,48-63`
+  * #### `NumaPolicy`
 
-  * `Clear Hash` `type button`  
+    `type string default auto`
+
+    Binds threads to a specific NUMA node to enhance performance on multi-CPU or multi-NUMA domain systems. Options:
+       * `none` - assumes a single NUMA node, no thread binding
+       * `system` - uses NUMA information available from the system and binds the threads accordingly
+       * `auto` - default; automatically selects `system` or `none` based on the system   
+       * `hardware` - uses NUMA information from the underlying hardware and binds the threads accordingly, overrides any previous affinities.  
+       _Should be used if Stockfish doesn't utilize all threads, e.g. Windows 10 or certain GUI's like ChessBase._
+       * `[[custom]]` - precisely specify the available CPUs per numa domain. ':' separates numa nodes; ',' separates cpu indices; supports "first-last" range syntax for cpu indices, for example `0-15,32-47:16-31,48-63`
+
+  * #### `Clear Hash`
+
+    `type button`
+
     Clear the hash table.
 
-  * `Ponder` `type check default false`  
+  * #### `Ponder`
+
+    `type check default false`
+
     Let Stockfish ponder its next move while the opponent is thinking.
 
-  * `EvalFile` `type string default nn-[SHA256 first 12 digits].nnue`  
+  * #### `EvalFile`
+
+    `type string default nn-[SHA256 first 12 digits].nnue`
+
     The name of the file of the NNUE evaluation parameters. Depending on the GUI the filename might have to include the full path to the folder/directory that contains the file. Other locations, such as the directory that contains the binary and the working directory, are also searched.
 
-  * `EvalFileSmall` `type string default nn-[SHA256 first 12 digits].nnue`
+  * #### `EvalFileSmall`
+
+    `type string default nn-[SHA256 first 12 digits].nnue`
+
     Same as EvalFile.
 
-  * `UCI_Chess960` `type check default false`  
+  * #### `UCI_Chess960`
+
+    `type check default false`
+
     An option handled by your GUI. If true, Stockfish will play Chess960.
 
-  * `UCI_ShowWDL` `type check default false`  
+  * #### `UCI_ShowWDL`
+
+    `type check default false`
+
     If enabled, show approximate WDL statistics as part of the engine output.
     These WDL numbers model expected game outcomes for a given evaluation and game ply for engine self-play at fishtest LTC conditions (60+0.6s per game).
 
-  * `UCI_LimitStrength` `type check default false`  
+  * #### `UCI_LimitStrength`
+
+    `type check default false`
+
     Enable weaker play aiming for an Elo rating as set by `UCI_Elo`. This option overrides `Skill Level`.
 
-  * `UCI_Elo` `type spin default 1320 min 1320 max 3190`  
-    If `UCI_LimitStrength` is enabled, it aims for an engine strength of the given Elo.
-    This Elo rating has been calibrated at a time control of 60s+0.6s and anchored to CCRL 40/4.
+  * #### `UCI_Elo`
 
-  * `Skill Level` `type spin default 20 min 0 max 20`  
+    `type spin default 1320 min 1320 max 3190`
+
+    If `UCI_LimitStrength` is enabled, it aims for an engine strength of the given Elo.
+    This Elo rating has been calibrated at a time control of 120s+1s and anchored to CCRL 40/4.
+
+  * #### `Skill Level`
+
+    `type spin default 20 min 0 max 20`
+
     Lower the `Skill Level` in order to make Stockfish play weaker (see also `UCI_LimitStrength`).
     Internally, MultiPV is enabled, and with a certain probability depending on the `Skill Level`, a weaker move will be played.
 
-  * `SyzygyPath` `type string default <empty>`  
+  * #### `SyzygyPath`
+
+    `type string default <empty>`
+
     Path to the folders/directories storing the Syzygy tablebase files. Multiple directories are to be separated by `;` on Windows and by `:` on Unix-based operating systems. Do not use spaces around the `;` or `:`.
 
     Example: `C:\tablebases\wdl345;C:\tablebases\wdl6;D:\tablebases\dtz345;D:\tablebases\dtz6`
 
     It is recommended to store .rtbw files on an SSD. There is no loss in storing the .rtbz files on a regular HDD. It is recommended to verify all md5 checksums of the downloaded tablebase files (`md5sum -c checksum.md5`) as corruption will lead to engine crashes.
 
-  * `SyzygyProbeDepth` `type spin default 1 min 1 max 100`  
+  * #### `SyzygyProbeDepth`
+
+    `type spin default 1 min 1 max 100`
+
     Minimum remaining search depth for which a position is probed. Set this option to a higher value to probe less aggressively if you experience too much slowdown (in terms of nps) due to tablebase probing.
 
-  * `Syzygy50MoveRule` `type check default true`  
+  * #### `Syzygy50MoveRule`
+
+    `type check default true`
+
     Disable to let fifty-move rule draws detected by Syzygy tablebase probes count as wins or losses. This is useful for ICCF correspondence games.
 
-  * `SyzygyProbeLimit` `type spin default 7 min 0 max 7`  
+  * #### `SyzygyProbeLimit`
+
+    `type spin default 7 min 0 max 7`
+
     Limit Syzygy tablebase probing to positions with at most this many pieces left (including kings and pawns).
 
-  * `Move Overhead` `type spin default 10 min 0 max 5000`  
+  * #### `Move Overhead`
+
+    `type spin default 10 min 0 max 5000`
+
     Assume a time delay of x ms due to network and GUI overheads. Specifying a value larger than the default is needed to avoid time losses or near instantaneous moves, in particular for time controls without increment (e.g. sudden death). The default is suitable for engine-engine matches played locally on dedicated hardware, while it needs to be increased on a loaded system, when playing over a network, or when using certain GUIs such as Arena or ChessGUI.
 
-  * `nodestime` `type spin default 0 min 0 max 10000`  
+  * #### `nodestime`
+
+    `type spin default 0 min 0 max 10000`
+
     Tells the engine to use nodes searched instead of wall time to account for elapsed time. Useful for engine testing. When this option is set, the engine is only limited by the total amount of nodes searched per game; this limit is calculated once per game. The initial time control values in milliseconds (time `time` and increment per move `inc`) are used as input values to calculate the total number of nodes per game (`totalnodes`). The increment per move `inc` is used as if it was just one move per game. The formula is `totalnodes = (time + inc * 1) * nodestime`. Suppose you specified `nodestime = 600`, and the time control per game is 300 seconds plus 3 seconds increment per move ("300+3s"), or 300000 milliseconds plus 3000 milliseconds increment per move. In that case, the maximum total number of nodes searched per game by the engine is `totalnodes = (300000 + 3000 * 1) * 600 = 181800000` (one hundred eighty-one million, eight hundred thousand) nodes, regardless of how much wall time it will actually take.
 
 
-  * `Debug Log File` `type string default`  
+  * #### `Debug Log File`
+
+    `type string default`
+
     Write all communication to and from the engine into a text file.
 
 ### `position`
@@ -153,8 +212,9 @@ If the game was played from the start position the string `startpos` must be sen
 Examples:
 ```
 > position startpos
-> position fen rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq - 0 1
-> position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves g2g4 d7d5 f1g2 c8g4 c2c4
+> position startpos moves e2e4 e7e5 g1f3 b8c6 f1b5
+> position fen 8/1B6/8/5p2/8/8/5Qrq/1K1R2bk w - - 0 1
+> position fen 8/3P3k/n2K3p/2p3n1/1b4N1/2p1p1P1/8/3B4 w - - 0 1 moves g4f6 h7g7 f6h5 g7g6 d1c2
 ```
 
 ### `ucinewgame`
@@ -164,7 +224,8 @@ If the GUI hasn't sent a `ucinewgame` before the first `position` command, the e
 So the engine will not rely on this command even though all new GUIs should support it.  
 As the engine's reaction to `ucinewgame` can take some time the GUI should always send `isready` after `ucinewgame` to wait for the engine to finish its operation. The engine will respond with `readyok`.
 
-_This clears the hash and any information which was collected during the previous search._
+> [!NOTE]
+> This clears the hash and any information which was collected during the previous search.
 
 <details>
   <summary>Example</summary>
@@ -203,7 +264,13 @@ readyok
 
 Start calculating on the current position set up with the `position` command.  
 There are a number of parameters that can follow this command and all will be sent in the same string.  
-If no parameter is sent, then `go depth 245` will be executed.
+
+> [!NOTE]
+> If no parameter is sent, then `go depth 245` will be executed.
+
+> [!NOTE]
+> Mixing and matching different ways of limiting the search time (depth, nodes, movetime, wtime + winc + btime + binc) will result in the search ending when it hits any one of those limits.  
+> For example, you can limit the search to a maximum depth and time with `go depth x movetime y`.
 
 <details>
   <summary>Example: go infinite</summary>
@@ -341,9 +408,20 @@ If no parameter is sent, then `go depth 245` will be executed.
   ```
   > position startpos moves g2g4 e7e5 f2f3
   > go mate 1
-  info string NNUE evaluation using nn-ad9b42354671.nnue enabled
   info depth 1 seldepth 1 multipv 1 score mate 1 nodes 31 nps 10333 hashfull 0 tbhits 0 time 3 pv d8h4
   bestmove d8h4
+  ```
+  ```
+  > position fen rn1q1r2/p4pk1/1p3R1p/2ppP2Q/3P4/2P4P/P1P3P1/1R4K1 w - - 0 1 moves h5h6
+  > go mate 2
+  info depth 1 seldepth 3 multipv 1 score cp -536 nodes 2 nps 400 hashfull 0 tbhits 0 time 5 pv g7g8
+  info depth 2 seldepth 3 multipv 1 score cp -536 nodes 4 nps 800 hashfull 0 tbhits 0 time 5 pv g7g8
+  info depth 3 seldepth 3 multipv 1 score cp -536 nodes 6 nps 1200 hashfull 0 tbhits 0 time 5 pv g7g8
+  info depth 4 seldepth 3 multipv 1 score cp -536 nodes 8 nps 1600 hashfull 0 tbhits 0 time 5 pv g7g8
+  info depth 5 seldepth 5 multipv 1 score cp -551 nodes 14 nps 2333 hashfull 0 tbhits 0 time 6 pv g7g8 h6g5 g8h7
+  info depth 6 seldepth 4 multipv 1 score cp -551 nodes 23 nps 3833 hashfull 0 tbhits 0 time 6 pv g7g8 h6g5 g8h7
+  info depth 7 seldepth 5 multipv 1 score mate -2 nodes 36 nps 6000 hashfull 0 tbhits 0 time 6 pv g7g8 h6g5 g8h7 f6h6
+  bestmove g7g8 ponder h6g5
   ```
 </details>
 
@@ -388,49 +466,63 @@ If no parameter is sent, then `go depth 245` will be executed.
 
 Parameters:
 
-  * `searchmoves <move1> .... <movei>`  
+  * #### `searchmoves <move1> .... <movei>`
+
     Restrict search to these moves only.  
     Example: After `position startpos` and `go infinite searchmoves e2e4 d2d4` the engine will only search the two moves e2e4 and d2d4 in the initial position.
 
-  * `ponder`  
+  * #### `ponder`
+
     Start searching in pondering mode. It won't exit the search in ponder mode, even if it's mate!  
     This means that the last move sent in in the position string is the ponder move.  
     The engine can do what it wants to do, but after a `ponderhit` command it will execute the suggested move to ponder on.  
     This means that the ponder move sent by the GUI can be interpreted as a recommendation about which move to ponder.  
     However, if the engine decides to ponder on a different move, it won't display any mainlines as they are likely to be misinterpreted by the GUI because the GUI expects the engine to ponder on the suggested move.
 
-  * `wtime <x>`  
-    White has x ms left on the clock.
+  * #### `wtime <x>`
 
-  * `btime <x>`  
-    Black has x ms left on the clock.
+    Tell the engine that White has x ms left on the clock.
 
-  * `winc <x>`  
-    White increment per move in ms if x > 0.
+  * #### `btime <x>`
 
-  * `binc <x>`  
-    Black increment per move in ms if x > 0.
+    Tell the engine that Black has x ms left on the clock.
 
-  * `movestogo <x>`  
-    There are x moves to the next time control  
+  * #### `winc <x>`
+
+    Tell the engine that White's increment per move in ms if x > 0.
+
+  * #### `binc <x>`
+
+    Tell the engine that Black's increment per move in ms if x > 0.
+
+  * #### `movestogo <x>`
+
+    Tell the engine that there are x moves to the next time control  
     _Note: this will only be sent if x > 0, if you don't get this and get the wtime and btime it's sudden death._
 
-  * `depth <x>`  
-    Search x plies only.
+  * #### `depth <x>`
 
-  * `nodes <x>`  
-    Search x nodes only.
+    Stop the search when depth x has been reached.
 
-  * `mate <x>`  
-    Search for a mate in x moves.
+  * #### `nodes <x>`
 
-  * `movetime <x>`  
-    Search exactly x ms.
+    Stop the search when approximately x number of nodes have been reached.
 
-  * `infinite`  
-    Search until the `stop` command. Stockfish won't exit the search without being told so in this mode!
+  * #### `mate <x>`
 
-  * `perft <x>`  
+    Stop the search when/if a mate in x or less moves is found.  
+    It will stop if the side to move is mating and since Stockfish 17 when getting mated too.
+
+  * #### `movetime <x>`
+
+    Stop the search when approximately x ms have passed.
+
+  * #### `infinite`
+
+    Search until the `stop` command is given. Stockfish won't exit the search without being told so in this mode!
+
+  * #### `perft <x>`
+
     A debugging function to walk the move generation tree of strictly legal moves to count all the leaf nodes of a certain depth.
 
 ### `stop`
@@ -606,6 +698,55 @@ The bench command may also be used in the command line when executing Stockfish.
 > * **String parameters are case-sensitive**. In case of invalid values of string parameters, the error is not given, and the behavior is undefined (the program does not fall back to a default value).
 > * The `[file path]` may contain **one or more positions**, each on a separate line.
 
+### `speedtest`
+
+> [!NOTE]  
+> This command is currently not available in any major or minor release. It is only available in [pre-releases](https://github.com/official-stockfish/Stockfish/releases?q=prerelease%3Atrue) since [3ac75cd (2024-09-28)](https://github.com/official-stockfish/Stockfish/commit/3ac75cd27d914da29280163c9d391bbca414d766).
+
+Measures the speed of the computer with a realistic and stable hardware benchmark. By default, Stockfish will run on all available threads, using a reasonable hash, on a number of positions that represent at typical game. The output is the achieved Nodes/second. 
+
+The simplest and intended usage is:
+`./stockfish speedtest`
+
+The advanced usage is `speedtest [threads] [hash (MiB)] [runtime (s)]`
+
+<details>
+ <summary>Example with output</summary>
+
+```
+C:\dev\stockfish-master\src>stockfish.exe speedtest
+Stockfish dev-20240928-nogit by the Stockfish developers (see AUTHORS file)
+info string Using 16 threads
+Warmup position 3/3
+Position 258/258
+===========================
+Version                    : Stockfish dev-20240928-nogit
+Compiled by                : g++ (GNUC) 13.2.0 on MinGW64
+Compilation architecture   : x86-64-vnni256
+Compilation settings       : 64bit VNNI BMI2 AVX2 SSE41 SSSE3 SSE2 POPCNT
+Compiler __VERSION__ macro : 13.2.0
+Large pages                : yes
+User invocation            : speedtest
+Filled invocation          : speedtest 16 2048 150
+Available processors       : 0-15
+Thread count               : 16
+Thread binding             : none
+TT size [MiB]              : 2048
+Hash max, avg [per mille]  :
+    single search          : 40, 21
+    single game            : 631, 428
+Total nodes searched       : 2099917842
+Total search time [s]      : 153.937
+Nodes/second               : 13641410
+```
+
+</details>
+
+| Parameter | Default       |
+|-----------|:-------------:|
+| `threads` | all           |
+| `hash`    | threads * 128 |
+| `runtime` | 150           |
 
 ### `d`
 
@@ -723,3 +864,10 @@ If the currently loaded network is not the embedded network (some net set throug
 
 Flips the side to move.
 
+### `help`
+
+Gives version info, describes Stockfish as a chess engine using UCI, and points to the GitHub page for more details.
+
+### `license`
+
+Gives version info, describes Stockfish as a chess engine using UCI, and points to the GitHub page for more details.

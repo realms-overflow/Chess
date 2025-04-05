@@ -4,7 +4,7 @@
 
 Also known as "cores", "CPUs" or "vCPUs".
 The amount of CPU threads that the engine will use, usually the higher the better.
-Note that a modern CPU will have multiple cores, that typically can run two threads each.
+Note that a modern CPU will have multiple cores and typically can run two threads each.
 
 ### Hash
 
@@ -44,7 +44,7 @@ The idea of performing consecutive searches at higher depths each time.
 
 ### Null Move
 
-Also known as "passing move". TODO
+Also known as "passing move", it is when you don't make a move, "passing" the ability to move to the opponent. Although not a legal move, it is used in Null Move Pruning. 
 
 ### Time Control
 
@@ -102,8 +102,8 @@ Performed at the end of the main search, the purpose of this search is to only e
 
 Also known as "classic", "classical" or "HCE". 
 
-This is the older evaluation method that is generally not used today. It uses various heuristics and rules (e.g. material, pawn structure, king safety, mobility, etc.) to assign the evaluation. Although it is slightly faster than NNUE evaluation, it is much less accurate, and is not used most of the time.
+This is the older evaluation method that is generally not used today in most engines and was [removed from Stockfish in July 2023](https://github.com/official-stockfish/Stockfish/commit/af110e0). It uses various heuristics and rules (e.g. material, pawn structure, king safety, mobility, etc.) to assign the evaluation. Although it is faster than a NNUE evaluation, it is much less accurate.
 
 ### Efficiently Updatable Neural Network
 
-Also known as "NNUE". The first NNUE implementation was added in Stockfish 12, and evaluates positions using a neural network, which is trained on a large set of training data. NNUE is typically much more accurate than classical evaluation, gaining hundreds of Elo.
+Also known as "NNUE". Introduced in Stockfish in [August 2020](https://stockfishchess.org/blog/2020/introducing-nnue-evaluation/) and first shipped with Stockfish 12. This implementation evaluates positions using a neural network, which is trained on a large set of training data. NNUE is typically much more accurate than classical evaluation, gaining hundreds of Elo.

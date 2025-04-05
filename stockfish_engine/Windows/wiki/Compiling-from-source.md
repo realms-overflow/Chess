@@ -8,7 +8,7 @@
 help                    > Display architecture details
 profile-build           > standard build with profile-guided optimization
 build                   > skip profile-guided optimization
-net                     > Download the default nnue net
+net                     > Download the default nnue nets
 strip                   > Strip executable
 install                 > Install executable
 clean                   > Clean up
@@ -27,12 +27,14 @@ x86-64-avx2             > x86 64-bit with avx2 support
 x86-64-sse41-popcnt     > x86 64-bit with sse41 and popcnt support
 x86-64-modern           > deprecated, currently x86-64-sse41-popcnt
 x86-64-ssse3            > x86 64-bit with ssse3 support
-x86-64-sse3-popcnt      > x86 64-bit with sse3 and popcnt support
+x86-64-sse3-popcnt      > x86 64-bit with sse3 compile and popcnt support
 x86-64                  > x86 64-bit generic (with sse2 support)
 x86-32-sse41-popcnt     > x86 32-bit with sse41 and popcnt support
 x86-32-sse2             > x86 32-bit with sse2 support
-x86-32                  > x86 32-bit generic (with mmx and sse support)
+x86-32                  > x86 32-bit generic (with mmx compile support)
 ppc-64                  > PPC 64-bit
+ppc-64-altivec          > PPC 64-bit with altivec support
+ppc-64-vsx              > PPC 64-bit with vsx support
 ppc-32                  > PPC 32-bit
 armv7                   > ARMv7 32-bit
 armv7-neon              > ARMv7 32-bit with popcnt and neon
@@ -43,6 +45,9 @@ apple-silicon           > Apple silicon ARM64
 general-64              > unspecified 64-bit
 general-32              > unspecified 32-bit
 riscv64                 > RISC-V 64-bit
+loongarch64             > LoongArch 64-bit
+loongarch64-lsx         > LoongArch 64-bit with SIMD eXtension
+loongarch64-lasx        > LoongArch 64-bit with Advanced SIMD eXtension
 ```
 
 ### Compilers
@@ -51,7 +56,7 @@ riscv64                 > RISC-V 64-bit
 gcc                     > GNU compiler (default)
 mingw                   > GNU compiler with MinGW under Windows
 clang                   > LLVM Clang compiler
-icc                     > Intel compiler
+icx                     > Intel oneAPI DPC++/C++ Compiler
 ndk                     > Google NDK to cross-compile for Android
 ```
 
@@ -129,10 +134,20 @@ Refer to the [MSYS2 homepage](https://www.msys2.org/) for more detailed informat
 
 ### Installing MSYS2
 
-### Install MSYS2 with Chocolatey
-[Chocolatey](https://chocolatey.org/) is a command line package manager for Windows, always run Chocolatey commands in a powershell/cmd with administrator rights (right click on `Start` menu, select `Windows Powershell (Admin)` or `Command Prompt (Admin)`):
+### Install MSYS2 with WinGet
+[WinGet](https://learn.microsoft.com/en-us/windows/package-manager/winget/) is the Microsoft command line tool enabling users to discover, install, upgrade, remove and configure applications on Windows 10, Windows 11, and Windows Server 2025 computers. This tool is the client interface to the Windows Package Manager service.
+1. Open a powershell and run:
+```cmd
+winget install MSYS2.MSYS2
+``` 
+
+### Install MSYS2 with Chocolatey (for Windows 8)
+[Chocolatey](https://chocolatey.org/) is a third-party command line package manager for Windows 8, Windows 10 and Windows 11, always run Chocolatey commands in a powershell/cmd with administrator rights (right click on `Start` menu, select `Windows Powershell (Admin)` or `Command Prompt (Admin)`):
 1. Open a powershell (admin) (not a cmd) and copy the official [Chocolatey install command](https://chocolatey.org/install) to install Chocolatey
-2. In a powershell/cmd (admin) execute the command `choco install msys2 -y`
+2. In a powershell/cmd (admin) execute the command:
+```cmd
+choco install msys2 -y
+```
 
 As alternative write this text file `install_choco_msys2.cmd`, right click and select `Run as administrator`:
 <details><summary>Click to view</summary>
@@ -150,17 +165,18 @@ choco install msys2 -y
 </details>
 
 ### Install MSYS2 with the official installer
-1. Download and start the [one-click installer for MSYS2](https://www.msys2.org/). It's suggested to choose `C:\tools\msys64` as installation folder to be compatible with fishtest framework. MSYS2 no longer support an installer for Windows 32-bit, the [latest provided](https://github.com/msys2/msys2-installer/releases/tag/2020-05-17) is not able to install packages.
+1. Download and start the [one-click installer for MSYS2](https://www.msys2.org/). MSYS2 no longer support an installer for Windows 32-bit, the [latest provided](https://github.com/msys2/msys2-installer/releases/tag/2020-05-17) is not able to install packages.
 2. The installer runs a `MSYS2 MSYS` shell as a last step. Update the core packages by typing and executing `pacman -Syuu`. When finished, close the `MSYS2 MSYS` shell.
 
-With MSYS2 installed to `C:\tools\msys64` your home directory will be `C:\tools\msys64\home\<your_username>`. Note that within the MSYS2 shell, paths are written in Unix-like way:
+With MSYS2 installed to `C:\msys64` your home directory will be `C:\msys64\home\<your_username>`. Note that within the MSYS2 shell, paths are written in Unix-like way:
 
-* Windows path: `C:\tools\msys64`
-* Unix-like path: `/c/tools/msys64`
-* Windows path: `C:\tools\msys64\home`
-* Unix-like path: `/home` or `/c/tools/msys64/home`
+* Windows path: `C:\msys64`
+* Unix-like path: `/c/msys64`
+* Windows path: `C:\msys64\home`
+* Unix-like path: `/home` or `/c/msys64/home`
 
-_Note: You can also use `ls` to list the files and folders in a directory, similar to how you would use `dir` in Windows._
+> [!TIP]
+> You can also use `ls` to list the files and folders in a directory, similar to how you would use `dir` in Windows.
 
 ### GCC
 This works with all the Windows versions.
@@ -265,7 +281,7 @@ cd
 ```
 </details>
 
-2. Start a `MSYS2 MinGW x64` shell (not a `MSYS2 MSYS` one), `C:\tools\msys64\mingw64.exe`, or start a `MSYS2 MinGW x86` shell, `C:\tools\msys64\mingw32.exe`, to build a 32 bit application.
+2. Start a `MSYS2 MinGW x64` shell (not a `MSYS2 MSYS` one), `C:\msys64\mingw64.exe`, or start a `MSYS2 MinGW x86` shell, `C:\msys64\mingw32.exe`, to build a 32 bit application.
 3. Navigate to wherever you saved the script (e.g. type and execute `cd '/d/Program Files/Stockfish'` to navigate to `D:\Program Files\Stockfish`).
 4. Run the script by typing and executing `bash makefish.sh`.
 
@@ -332,13 +348,14 @@ cd
 ```
 </details>
 
-2. Start a `MSYS2 MinGW Clang x64` shell, `C:\tools\msys64\clang64.exe`.
+2. Start a `MSYS2 MinGW Clang x64` shell, `C:\msys64\clang64.exe`.
 3. Navigate to wherever you saved the script (e.g. type and execute `cd '/d/Program Files/Stockfish'` to navigate to `D:\Program Files\Stockfish`).
 4. Run the script by typing and executing `bash makefish.sh`.
 
 ### Microsoft Visual Studio
 
-_Note: Building Stockfish with Visual Studio is **not officially supported**._
+> [!CAUTION]
+> Building Stockfish with Visual Studio is **not officially supported**.
 
 It is required to explicitly set the stack reserve to avoid crashes. See point 5. below.
 
@@ -578,7 +595,8 @@ b) If you do NOT have Android Studio installed, don't worry! You don't need it.
    and pick the latest version for your platform. In this example we will stick to either Windows
    or Linux, but the Mac version should be not much different to use.
 
-_Note: The latest LTS version is r23b (23.1.7779620). This will work fine. The minimum version you need is r21e (21.4.7075529), so if you already have that, you are all set._
+> [!NOTE]
+> The latest LTS version is r23b (23.1.7779620). This will work fine. The minimum version you need is r21e (21.4.7075529), so if you already have that, you are all set.
 
 If you downloaded it directly, unzip it to "C:\Android\Sdk\ndk\", or if you are on Linux, inside your home
 directory to /home/(your user name)/Android/Sdk/ndk
@@ -622,7 +640,8 @@ On Linux:
 $ export PATH=/home/johndoe/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
 ```
 
-_Note: These PATH settings are in effect only for your current session._
+> [!NOTE]
+> These PATH settings are in effect only for your current session.
 
 Now you should be able to call the compiler we will use from the command line.
 Let's check which version we have, this example output is from Windows, the Linux output should be quite similar.
@@ -731,9 +750,8 @@ and in the configuration menu adjust its UCI parameter settings. Depending on th
 and the available memory, you should probably give it more than the default one Thread, and more than the default
 16 MB of Hash memory. A good start would be to try 2 Threads, and 512 MB for the Hash tables, and see if you can beat it ;-)
 
-_Note: As Stockfish is a very computation-intense program, you should probably not give it as many threads as
-your device CPU has processor cores. Especially in Analysis mode, when Stockfish is thinking permanently, and for
-extended amounts of time, this might suck your device battery empty quite quickly._
+> [!WARNING]
+> As Stockfish is a very computation-intense program, you should probably not give it as many threads as your device CPU has processor cores. Especially in Analysis mode, when Stockfish is thinking permanently, and for extended amounts of time, this might suck your device battery empty quite quickly.
 
 Enjoy!
 
@@ -799,16 +817,14 @@ fi
 ```
 </details>
 
-### For all platforms using Zig
+### For all platforms (host/target) using Zig
 
 [Zig](https://ziglang.org/) is a programming language in early development stage that is binary compatible with C.
 The Zig toolchain, based on LLVM, ships the source code of all the required libraries to easily cross compile Zig/C/C++ code for several CPU Architecture and OS combinations. All the work required is to set as target the proper supported [triple \<arch-os-abi\>](https://github.com/ziglang/zig-bootstrap#supported-triples) (eg `x86_64-windows-gnu`, `aarch64-linux-musl`).
 
 You can use Zig:
 * installing Zig with a [package manager](https://github.com/ziglang/zig/wiki/Install-Zig-from-a-Package-Manager) for your OS, or
-* unzipping the [Zig archive](https://ziglang.org/download/) (~50 Mbi) and setting the PATH for the shell with `export PATH=/home/username/zig:$PATH`
-
-Note: `snap` does not work on WSL, download the archive. 
+* unzipping the [Zig archive](https://ziglang.org/download/) (~70 Mbi) and setting the PATH for the shell with `export PATH=/home/username/zig:$PATH`
 
 Here is a script to cross compile from a clean Ubuntu a static build of Stockfish targeting an armv8 or armv7 CPU running on Linux or Android:
 
@@ -826,16 +842,15 @@ sudo apt install -y qemu-user
 # armv8 static build with musl libc
 git clone https://github.com/official-stockfish/Stockfish.git
 cd Stockfish/src
-make -j build ARCH=armv8 COMP=gcc CXX="zig c++ -target aarch64-linux-musl"
+make -j build ARCH=armv8 COMP=clang CXX="zig c++ -target aarch64-linux-musl"
 
 # test: qemu's magic at work
 qemu-aarch64 stockfish compiler
 qemu-aarch64 stockfish bench
 
 # armv7 static build with musl libc
-# comment out "-latomic" flag in Makefile
 make clean
-make -j build ARCH=armv7 COMP=gcc CXX="zig c++ -target arm-linux-musleabihf"
+make -j build ARCH=armv7 COMP=clang CXX="zig c++ -target arm-linux-musleabihf"
 
 # test: qemu's magic at work
 qemu-arm stockfish compiler
@@ -854,14 +869,15 @@ Here is a script to cross compile from a msys2 msys/mingw-w64 shell a static bui
 
 # one time configuration
 pacman -S --noconfirm --needed git make unzip
-wget https://ziglang.org/builds/zig-windows-x86_64-0.10.0-dev.2220+802f22073.zip
-unzip zig-windows-x86_64-0.10.0-dev.2220+802f22073.zip
-PATH=$(pwd)/zig-windows-x86_64-0.10.0-dev.2220+802f22073:${PATH}
+wget https://ziglang.org/builds/zig-windows-x86_64-0.14.0-dev.2546+0ff0bdb4a.zip
+
+unzip zig-windows-x86_64-0.14.0-dev.2546+0ff0bdb4a.zip
+export PATH="$(pwd)/zig-windows-x86_64-0.14.0-dev.2546+0ff0bdb4a:$PATH"
 
 # armv8 static build with musl libc
 git clone https://github.com/official-stockfish/Stockfish.git
 cd Stockfish/src
-make -j build ARCH=armv8 COMP=gcc CXX="zig c++ -target aarch64-linux-musl"
+make -j build ARCH=armv8 COMP=clang CXX="zig c++ -target aarch64-linux-musl"
 mv stockfish.exe stockfish_armv8
 ```
 </details>

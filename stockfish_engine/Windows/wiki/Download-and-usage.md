@@ -2,7 +2,7 @@
 
 > [!NOTE]
 > Stockfish is a [**command line program**](Stockfish-FAQ#executing-stockfish-opens-a-cmd-window). You may want to use it in your own UCI-compatible [chess GUI](#download-a-chess-gui).  
-> Developers should communicate with Stockfish via the [UCI protocol](https://github.com/official-stockfish/Stockfish/wiki/UCI-&-Commands#standard-commands).
+> Developers should communicate with Stockfish via the [UCI protocol](UCI-&-Commands#standard-commands).
 
 ### Get started
 
@@ -16,26 +16,16 @@
 
 #### Latest release
 
-https://stockfishchess.org/download/
-
-* [Windows](https://stockfishchess.org/download/windows/)
-* [Linux](https://stockfishchess.org/download/linux/)
-* macOS
-  * [App Store](https://itunes.apple.com/us/app/stockfish/id801463932?ls=1&mt=12)
-  * `brew install stockfish`
-* [iOS](https://itunes.apple.com/us/app/smallfish-chess-for-iphone/id675049147?mt=8)
-
-Binaries are also available on GitHub: https://github.com/official-stockfish/Stockfish/releases/latest
+- https://stockfishchess.org/download/
+- https://github.com/official-stockfish/Stockfish/releases/latest
 
 #### Latest development build
 
-1. Navigate to our [releases](https://github.com/official-stockfish/Stockfish/releases?q=prerelease%3Atrue)
-2. Expand the Assets
-3. Download your preferred binary
+- https://github.com/official-stockfish/Stockfish/releases?q=prerelease%3Atrue
 
 > [!NOTE]
 > We **only** recommend downloading from the [official GitHub releases](https://github.com/official-stockfish/Stockfish/releases?q=prerelease%3Atrue).  
-> Websites such as [Abrok](<https://abrok.eu/stockfish/>) are third parties, so we cannot guarantee the safety, reliability, and availability of those binaries because we are not responsible for them.
+> Websites such as Abrok are third parties, so we cannot guarantee the safety, reliability, and availability of those binaries because we are not responsible for them.
 
 ### Choose a binary
 
@@ -43,16 +33,14 @@ In order of preference:
 1. x86-64-vnni512
 2. x86-64-vnni256
 3. x86-64-avx512
-   * AMD: Zen 4 and newer (e.g. Ryzen 9 7950X).
-4. x86-64-avxvnni
-5. x86-64-bmi2
-   * Intel: 4th Gen and newer (e.g. i7 4770K, i5 13600K).
-   * AMD: Zen 3 (e.g. Ryzen 5 5600X).
-6. x86-64-avx2
-   * AMD: Zen, Zen+, and Zen 2 (e.g. Ryzen 5 1600, Ryzen 5 3600).
-7. x86-64-sse41-popcnt
-8. x86-64
-9. x86-32
+   - AMD Zen 4+
+4. x86-64-bmi2
+   - Intel (2013+) and AMD Zen 3+
+5. x86-64-avx2
+   - Intel (2013+) and AMD (2015+)
+6. x86-64-sse41-popcnt
+   - Intel (2008+) and AMD (2011+)
+7. x86-64
 
 ---
 
@@ -75,8 +63,10 @@ A chess graphical user interface allows you to interact with the engine in a use
 | [![][chessx]][chessx] | [![][liground]][liground] |
 | **[Lucas Chess](https://lucaschess.pythonanywhere.com/downloads)** ([source code](https://github.com/lukasmonk/lucaschessR2)) | **[Scid vs. PC](https://scidvspc.sourceforge.net/#toc3)** ([source code](https://sourceforge.net/projects/scidvspc/)) |
 | [![][lucaschess]][lucaschess] | [![][scidvspc]][scidvspc] |
-| **[XBoard](https://www.gnu.org/software/xboard/#download)** ([source code](https://ftp.gnu.org/gnu/xboard/)) |  |
-| [![][xboard]][xboard] |  |
+| **[XBoard](https://www.gnu.org/software/xboard/#download)** ([source code](https://ftp.gnu.org/gnu/xboard/)) | **[jose](https://bitbucket.org/hrimfaxi/jose)** ([source code](https://bitbucket.org/hrimfaxi/jose/src/main)) <br>[How to install Stockfish](#jose)  |
+| [![][xboard]][xboard] | ![jose](https://hrimfaxi.bitbucket.io/jose/images/shots/shot01.png) |
+
+
 
 #### Mobile
 
@@ -111,55 +101,60 @@ A chess graphical user interface allows you to interact with the engine in a use
 
 ## Install in a Chess GUI
 
+### En Croissant
+
+Engines tab > Add new > Install Stockfish
+
+![encroissant_install](https://github.com/user-attachments/assets/4bf61e37-5a69-4059-ba3e-f7c2f5020aee)
+
 ### Arena
 
 1. Engines > Install New Engine...
 
-    <img src="https://user-images.githubusercontent.com/63931154/206901675-33341f5f-03c7-4ca1-aaa5-185a2a7f5b83.png" width="300">
+    ![arena_install_1](https://user-images.githubusercontent.com/63931154/206901675-33341f5f-03c7-4ca1-aaa5-185a2a7f5b83.png)
 
 2. Select and open the Stockfish executable
 
-    <img src="https://user-images.githubusercontent.com/63931154/206901703-a6538e9f-352b-4a6e-9c89-be804d57f010.png" width="300">
+    ![arena_install_2](https://user-images.githubusercontent.com/63931154/206901703-a6538e9f-352b-4a6e-9c89-be804d57f010.png)
 
 ### Nibbler
 
 1. Engine > Choose engine...
 
-    <img src="https://user-images.githubusercontent.com/63931154/206902163-8a92d15c-0793-4b1a-9f9c-c5d8a9dd294e.png" width="300">
+    ![nibbler_install_1](https://user-images.githubusercontent.com/63931154/206902163-8a92d15c-0793-4b1a-9f9c-c5d8a9dd294e.png)
 
 2. Select and open the Stockfish executable
 
-    <img src="https://user-images.githubusercontent.com/63931154/206902197-0062badd-3d12-45dd-b19f-918edfbb22ca.png" width="300">
-
-### En Croissant
-
-1. Engines tab > Add new
-
-    <img src="https://github.com/official-stockfish/Stockfish/assets/63931154/5e0ebb3d-ef21-47b3-a392-42cf8db810cc" width="300">
-
-2. Click the Install button
-
-    <img src="https://github.com/official-stockfish/Stockfish/assets/63931154/b513adb7-9edb-4467-a588-8aacbae56bc6" width="300">
+    ![nibbler_install_2](https://user-images.githubusercontent.com/63931154/206902197-0062badd-3d12-45dd-b19f-918edfbb22ca.png)
 
 ### Lichess Local Engine
 
 1. Log in with Lichess
 
-    <img src="https://user-images.githubusercontent.com/63931154/232722746-b85d345f-e455-4d62-ad33-98d29756d51c.png" width="300">
+    ![lichesslocalengine_install_1](https://user-images.githubusercontent.com/63931154/232722746-b85d345f-e455-4d62-ad33-98d29756d51c.png)
 
-    <img src="https://user-images.githubusercontent.com/63931154/232723150-5e51029a-b345-4789-b12d-beef91c7e835.png" width="300">
+    ![lichesslocalengine_install_2](https://user-images.githubusercontent.com/63931154/232723150-5e51029a-b345-4789-b12d-beef91c7e835.png)
 
 2. Click the Install Stockfish button
 
-    <img src="https://user-images.githubusercontent.com/63931154/232723405-8c15861d-578d-432b-a009-362d63bd69d0.png" width="300">
+    ![lichesslocalengine_install_3](https://user-images.githubusercontent.com/63931154/232723405-8c15861d-578d-432b-a009-362d63bd69d0.png)
 
 3. Go to the Lichess analysis page
 
    https://lichess.org/analysis
 
-4. Select the engine in the engine manager
+4. Select the engine from the engine list
 
-    <img src="https://user-images.githubusercontent.com/63931154/232724185-b3427cd5-8a7e-4dca-aa76-7e3afdd81c0f.png" width="300">
+    ![lichesslocalengine_install_4](https://github.com/user-attachments/assets/9bcaccfb-9eb1-43a6-9379-c118f2ac77bf)
+
+### jose
+
+Stockfish is already bundled with jose. To enable it for play and analysis do:
+
+1. Edit > Options (F9)
+2. select the 'Engine' tab
+3. select Stockfish in the list of engines
+4. below, you can edit all the engine parameters
 
 ---
 
@@ -170,39 +165,45 @@ A chess graphical user interface allows you to interact with the engine in a use
 
 ### Arena
 
-* Right click in the engine name > Configure
+> [!NOTE]
+> First uncheck these two settings
+> 
+> ![arena_settings_note](https://github.com/user-attachments/assets/c33d0e80-611a-4044-8f3f-04b18268e098)
 
-    <img src="https://user-images.githubusercontent.com/63931154/206901924-aad83991-dfde-4083-a29c-a565effca034.png" width="300"><br>
-    <img src="https://user-images.githubusercontent.com/63931154/206913983-82b8cf42-2a03-4896-9511-3472b1185a7e.png" width="300">
+Right click in the engine name > Configure
+
+![arena_settings_1](https://user-images.githubusercontent.com/63931154/206901924-aad83991-dfde-4083-a29c-a565effca034.png)
+![arena_settings_2](https://user-images.githubusercontent.com/63931154/206913983-82b8cf42-2a03-4896-9511-3472b1185a7e.png)
+![arena_settings_3](https://github.com/user-attachments/assets/aa0ae3fa-1848-4c54-953c-090a860471e8)
 
 ### Nibbler
 
-* In the Engine section
+Open the Engine menu
 
-    <img src="https://user-images.githubusercontent.com/63931154/206902419-4a2a5580-2d66-4ea1-97f2-93bc2ff846bd.png" width="300">
+![nibbler_settings_1](https://user-images.githubusercontent.com/63931154/206902419-4a2a5580-2d66-4ea1-97f2-93bc2ff846bd.png)
 
 ### En Croissant
 
-1. Go to the Analysis Board
+Select Stockfish in the engines tab
 
-    <img src="https://github.com/official-stockfish/Stockfish/assets/63931154/175c3d96-c411-473e-874d-dd3c27cda6d5" width="300">
+![encroissant_settings_1](https://github.com/user-attachments/assets/e6d8dec3-9a1e-4171-8b6e-ffac9bd51cea)
 
-2. Go to the Analysis tab, enable Stockfish, and click the settings button
+or open the engine settings in the Analysis board
 
-    <img src="https://github.com/official-stockfish/Stockfish/assets/63931154/98eb595b-5357-4298-ab8f-cd02dd8465e9" width="300">
+![encroissant_settings_2](https://github.com/user-attachments/assets/e20112a3-d627-46d1-8423-93c39b17f4b5)
 
 ### Lichess
 
-* In the menu
+Open the engine settings
 
-    <img src="https://user-images.githubusercontent.com/63931154/206903008-a672ea93-09a0-4ca7-94e0-2d1228c7c25d.png" width="300">
+![lichess_settings_1](https://github.com/user-attachments/assets/d2f48f41-1c68-4e14-902b-cb1f270618e6)
 
 ### Chess.com
 
-* In the settings
+Click the settings button in the [analysis page](https://www.chess.com/analysis?tab=analysis)
 
-    <img src="https://user-images.githubusercontent.com/63931154/206903150-e0fa28c8-60dd-4f82-aea2-5cf35c6fa56d.png" width="300"><br>
-    <img src="https://user-images.githubusercontent.com/63931154/206903463-d96e3a59-52b6-4966-aed2-716c9f9c6c24.png" width="300">
+![chesscom_settings_1](https://github.com/user-attachments/assets/c2be2d17-9be4-4e32-a17c-9bdb8e456944)
+![chesscom_settings_2](https://github.com/user-attachments/assets/3ee3ce21-fb11-4443-84fc-20c2d7e41166)
 
 [encroissant]: https://github.com/official-stockfish/Stockfish/assets/63931154/e7b46c8a-6d96-49c7-b3a3-885a7a450037
 [nibbler]: https://github.com/official-stockfish/Stockfish/assets/63931154/06d67bf8-4ed8-466f-a79d-c185c6103d51

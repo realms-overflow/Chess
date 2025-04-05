@@ -1,12 +1,12 @@
 ## Syzygy tablebases
 
-If the engine is searching a position that is not in the tablebases (e.g. a position with 8 pieces), it will access the tablebases (TB) during the search. If the engine reports a very large score (near 200.00), this means it has found a winning line into a tablebase position. For general game play, TB bring only a limited increase in strength (see [our Elo measurements](Useful-data#elo-gain-using-syzygy)).
+If the engine is searching a position that is not in the tablebases (e.g. a position with 8 pieces), it will access the tablebases (TB) during the search. If the engine reports a very large score (near 200.00), it means that it has found a winning line into a tablebase position. For general play, tablebases bring only a limited increase in strength (see [our Elo measurements](Useful-data#elo-gain-using-syzygy)).
 
-If the engine is given a position to search that is in the tablebases, it will use the tablebases at the beginning of the search to preselect all good moves, i.e. all moves that preserve the win or preserve the draw while taking into account the 50-move rule. It will then perform a search only on those moves. The engine **will not move immediately**, unless there is only a single good move. The engine **will search for the shortest possible mate**, even though the position is known to be won.
+When the engine is given a position to search that is in the tablebases, it will use the tablebases at the beginning of the search to preselect all good moves, i.e. all moves that preserve the win or preserve the draw while taking into account the 50-move rule. It will then perform a search only on those moves. The engine **will not move immediately**, unless there is only a single good move. The engine **will search for the shortest possible mate**, even though the position is known to be won.
 
-It is therefore clear that this behaviour is not identical to what one might be used to with Nalimov tablebases. There are technical reasons for this difference, the main technical reason being that Nalimov tablebases use the DTM metric (distance-to-mate), while the Syzygy tablebases use a variation of the DTZ metric (distance-to-zero, zero meaning any move that resets the 50-move counter). This special metric is one of the reasons that the Syzygy tablebases are more compact than Nalimov tablebases, while still storing all information needed for optimal play and in addition being able to take into account the 50-move rule.
+It is therefore clear that this behavior is not identical to what one might be used to with Nalimov tablebases. There are technical reasons for this difference, the main technical reason being that Nalimov tablebases use the DTM metric (distance-to-mate), while the Syzygy tablebases use a variation of the DTZ metric (distance-to-zero, zero meaning any move that resets the 50-move counter). This special metric is one of the reasons that the Syzygy tablebases are more compact than Nalimov tablebases, while still storing all the information needed for optimal play and in addition being able to take into account the 50-move rule.
 
-Note that the use of TB 7 is possible with SF, it assumes that about 17TB of storage is available. Furthermore, the system must allow a single process to open all 1511 files, which sometimes requires increasing the default limit (e.g. `ulimit -n`).
+The use of 7-piece tablebases is possible with Stockfish and requires around 17TB of storage. Furthermore, the system must allow a single process to open all 1511 files, which sometimes requires increasing the default limit (e.g. `ulimit -n`).
 
 ---
 
@@ -33,10 +33,10 @@ The "speed of Stockfish" is the number of nodes (positions) Stockfish can search
 Nodes per second (nps) is a useful benchmark number as the same version of Stockfish playing will play stronger with larger nps.
 Different versions of Stockfish will play at different nps, for example, if the NNUE network architecture changes, but in this case the nps difference is not related to the strength difference.
 
-Notes:
-* Stop all other applications when measuring the speedup of Stockfish
-* Run at least 20 default benches (depth 13) for each build of Stockfish to have accurate measures
-* A speedup of 0.3% could be meaningless (i.e. within the measurement noise)
+> [!NOTE]
+> * Stop all other applications when measuring the speedup of Stockfish
+> * Run at least 20 default benches (depth 13) for each build of Stockfish to have accurate measures
+> * A speedup of 0.3% could be meaningless (i.e. within the measurement noise)
 
 To measure the speed of several builds of Stockfish, use one of these applications:
 * All OS:
@@ -154,6 +154,7 @@ To measure the speed of several builds of Stockfish, use one of these applicatio
     ./bench_parallel.sh ./stockfish-$BRANCH1 ./stockfish-$BRANCH2 $DEPTH $RUNS
     ```
     </details>
+  * [`speedtest`](UCI-&-Commands#speedtest) command
 
 * Windows only:
   * [FishBench](https://github.com/zardav/FishBench): Latest release [Fishbench v6.0](https://github.com/zardav/FishBench/releases/download/v6.0/FishBench.zip)
@@ -192,8 +193,6 @@ The NNUE evaluation was first introduced in shogi, and ported to Stockfish after
 
 On CPUs supporting modern vector instructions (avx2 and similar), the NNUE evaluation results in much stronger playing strength, even if the nodes per second computed by the engine is somewhat lower (roughly 50% of nps is typical).
 
-Notes:
-
-1. the NNUE evaluation depends on the Stockfish binary and the network parameter file (see the EvalFile UCI option). Not every parameter file is compatible with a given Stockfish binary, but the default value of the EvalFile UCI option is the name of a network that is guaranteed to be compatible with that binary.
-
-2. to use the NNUE evaluation, the additional data file with neural network parameters needs to be available. Normally, this file is already embedded in the binary or it can be downloaded. The filename for the default (recommended) net can be found as the default value of the `EvalFile` UCI option, with the format `nn-[SHA256 first 12 digits].nnue` (for instance, `nn-c157e0a5755b.nnue`). This file can be downloaded from `https://tests.stockfishchess.org/api/nn/[filename]` replacing `[filename]` as needed.
+> [!NOTE]
+> 1. The NNUE evaluation depends on the Stockfish binary and the network parameter file (see the `EvalFile` UCI option). Not every parameter file is compatible with a given Stockfish binary, but the default value of the EvalFile UCI option is the name of a network that is guaranteed to be compatible with that binary.
+> 2. To use the NNUE evaluation, the additional data file with neural network parameters needs to be available. Normally, this file is already embedded in the binary or it can be downloaded. The filename for the default (recommended) net can be found as the default value of the `EvalFile` UCI option, with the format `nn-[SHA256 first 12 digits].nnue` (for instance, `nn-c157e0a5755b.nnue`). This file can be downloaded from `https://tests.stockfishchess.org/api/nn/[filename]` replacing `[filename]` as needed.

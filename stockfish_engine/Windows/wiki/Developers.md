@@ -17,7 +17,7 @@ In the `URTC64` Shell run:
 
 #### clang-format
 
-Download [LLVM 17](https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.3/LLVM-17.0.3-win64.exe)
+Download [LLVM 18](https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/LLVM-18.1.8-win64.exe)
 
 Run the executable and in the installer choose:
 `Add LLVM to the system PATH for current user`
@@ -28,7 +28,7 @@ _There's a much higher quality version of this available on our [Discord](https:
 
 https://github.com/official-stockfish/Stockfish/assets/45608332/d0323339-21f1-4d1d-aa86-183a7e10ed06
 
-_More in depth information about various compilers can be found [here](https://github.com/official-stockfish/Stockfish/wiki/Compiling-from-source#windows)._
+_More in depth information about various compilers can be found [here](Compiling-from-source#windows)._
 
 </details>
 
@@ -49,7 +49,7 @@ sudo apt install build-essential git
 #### clang-format
 
 ```bash
-sudo apt install clang-format-17
+sudo apt install clang-format-18
 ```
 
 </details>
@@ -92,7 +92,7 @@ There are many ways to contribute to Stockfish:
 
 If you want to contribute to Stockfish directly, you can do so in a couple of ways.  
 Follow the steps described in our [Fishtest wiki](https://github.com/official-stockfish/fishtest/wiki/Creating-my-first-test) to create your first test.  
-__It is advised to first follow the [development setup](https://github.com/official-stockfish/Stockfish/wiki/Developers#stockfish-development-setup) steps for your platform__
+It is advised to first follow the [development setup](#stockfish-development-setup) steps for your platform.
 
 New commits to stockfish can mostly be categorised in 2 categories:
 
@@ -140,7 +140,7 @@ That is not possible. You will have to write your own logic to create such a fea
 
 > I want to get an evaluation of the current position.
 
-While Stockfish has an [`eval`](Commands#eval) command, it only statically evaluates positions without performing any search. A more precise evaluation is available after you use the [`go`](Commands#go) command together with a specified limit.
+While Stockfish has an [`eval`](UCI-&-Commands#eval) command, it only statically evaluates positions without performing any search. A more precise evaluation is available after you use the [`go`](UCI-&-Commands#go) command together with a specified limit.
 
 ### Other resources
 
@@ -155,6 +155,10 @@ Stockfish is free and distributed under the [**GNU General Public License versio
 The only real limitation is that whenever you distribute Stockfish in some way, **you MUST always include the license and the full source code** (or a pointer to where the source code can be found) to generate the exact binary you are distributing. If you make any changes to the source code, these changes must also be made available under GPL v3.
 
 ## Git Hooks
+
+<details>
+
+<summary>Show more</summary>
 
 Place the following file into `.git/hooks/pre-push` and make it executable.
 `chmod +x .git/hooks/pre-push`. This will prevent you from pushing commits that
@@ -214,3 +218,4 @@ done
 
 exit 0
 ```
+</details>

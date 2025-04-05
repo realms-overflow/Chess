@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2025 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
 
 #include "movepick.h"
 
-#include <algorithm>
 #include <cassert>
-#include <utility>
+#include <limits>
 
 #include "bitboard.h"
+#include "misc.h"
 #include "position.h"
 
 namespace Stockfish {
@@ -82,16 +82,20 @@ MovePicker::MovePicker(const Position&              p,
                        Move                         ttm,
                        Depth                        d,
                        const ButterflyHistory*      mh,
+                       const LowPlyHistory*         lph,
                        const CapturePieceToHistory* cph,
                        const PieceToHistory**       ch,
-                       const PawnHistory*           ph) :
+                       const PawnHistory*           ph,
+                       int                          pl) :
     pos(p),
     mainHistory(mh),
+    lowPlyHistory(lph),
     captureHistory(cph),
     continuationHistory(ch),
     pawnHistory(ph),
     ttMove(ttm),
-    depth(d) {
+    depth(d),
+    ply(pl) {
 
     if (pos.checkers())
         stage = EVASION_TT + !(ttm && pos.pseudo_legal(ttm));
@@ -152,12 +156,13 @@ void MovePicker::score() {
             Square    to   = m.to_sq();
 
             // histories
-            m.value = (*mainHistory)[pos.side_to_move()][m.from_to()];
+            m.value = 2 * (*mainHistory)[pos.side_to_move()][m.from_to()];
             m.value += 2 * (*pawnHistory)[pawn_structure_index(pos)][pc][to];
-            m.value += 2 * (*continuationHistory[0])[pc][to];
+            m.value += (*continuationHistory[0])[pc][to];
             m.value += (*continuationHistory[1])[pc][to];
-            m.value += (*continuationHistory[2])[pc][to] / 3;
+            m.value += (*continuationHistory[2])[pc][to];
             m.value += (*continuationHistory[3])[pc][to];
+            m.value += (*continuationHistory[4])[pc][to] / 3;
             m.value += (*continuationHistory[5])[pc][to];
 
             // bonus for checks
@@ -171,16 +176,18 @@ void MovePicker::score() {
                                                : 0;
 
             // malus for putting piece en prise
-            m.value -= (pt == QUEEN  ? bool(to & threatenedByRook) * 49000
-                        : pt == ROOK ? bool(to & threatenedByMinor) * 24335
-                                     : bool(to & threatenedByPawn) * 14900);
+            m.value -= (pt == QUEEN ? bool(to & threatenedByRook) * 49000
+                        : pt == ROOK && bool(to & threatenedByMinor) ? 24335
+                                                                     : 0);
+
+            if (ply < LOW_PLY_HISTORY_SIZE)
+                m.value += 8 * (*lowPlyHistory)[ply][m.from_to()] / (1 + 2 * ply);
         }
 
         else  // Type == EVASIONS
         {
             if (pos.capture_stage(m))
-                m.value =
-                  PieceValue[pos.piece_on(m.to_sq())] - type_of(pos.moved_piece(m)) + (1 << 28);
+                m.value = PieceValue[pos.piece_on(m.to_sq())] + (1 << 28);
             else
                 m.value = (*mainHistory)[pos.side_to_move()][m.from_to()]
                         + (*continuationHistory[0])[pos.moved_piece(m)][m.to_sq()]
@@ -190,26 +197,20 @@ void MovePicker::score() {
 
 // Returns the next move satisfying a predicate function.
 // This never returns the TT move, as it was emitted before.
-template<MovePicker::PickType T, typename Pred>
+template<typename Pred>
 Move MovePicker::select(Pred filter) {
 
-    while (cur < endMoves)
-    {
-        if constexpr (T == Best)
-            std::swap(*cur, *std::max_element(cur, endMoves));
-
+    for (; cur < endMoves; ++cur)
         if (*cur != ttMove && filter())
             return *cur++;
 
-        cur++;
-    }
     return Move::none();
 }
 
 // This is the most important method of the MovePicker class. We emit one
 // new pseudo-legal move on every call until there are no more moves left,
 // picking the move with the highest score from a list of generated moves.
-Move MovePicker::next_move(bool skipQuiets) {
+Move MovePicker::next_move() {
 
     auto quiet_threshold = [](Depth d) { return -3560 * d; };
 
@@ -236,7 +237,7 @@ top:
         goto top;
 
     case GOOD_CAPTURE :
-        if (select<Next>([&]() {
+        if (select([&]() {
                 // Move losing capture to endBadCaptures to be tried later
                 return pos.see_ge(*cur, -cur->value / 18) ? true
                                                           : (*endBadCaptures++ = *cur, false);
@@ -260,7 +261,7 @@ top:
         [[fallthrough]];
 
     case GOOD_QUIET :
-        if (!skipQuiets && select<Next>([]() { return true; }))
+        if (!skipQuiets && select([]() { return true; }))
         {
             if ((cur - 1)->value > -7998 || (cur - 1)->value <= quiet_threshold(depth))
                 return *(cur - 1);
@@ -277,7 +278,7 @@ top:
         [[fallthrough]];
 
     case BAD_CAPTURE :
-        if (select<Next>([]() { return true; }))
+        if (select([]() { return true; }))
             return *(cur - 1);
 
         // Prepare the pointers to loop over the bad quiets
@@ -289,7 +290,7 @@ top:
 
     case BAD_QUIET :
         if (!skipQuiets)
-            return select<Next>([]() { return true; });
+            return select([]() { return true; });
 
         return Move::none();
 
@@ -298,21 +299,22 @@ top:
         endMoves = generate<EVASIONS>(pos, cur);
 
         score<EVASIONS>();
+        partial_insertion_sort(cur, endMoves, std::numeric_limits<int>::min());
         ++stage;
         [[fallthrough]];
 
     case EVASION :
-        return select<Best>([]() { return true; });
+    case QCAPTURE :
+        return select([]() { return true; });
 
     case PROBCUT :
-        return select<Next>([&]() { return pos.see_ge(*cur, threshold); });
-
-    case QCAPTURE :
-        return select<Next>([]() { return true; });
+        return select([&]() { return pos.see_ge(*cur, threshold); });
     }
 
     assert(false);
     return Move::none();  // Silence warning
 }
+
+void MovePicker::skip_quiet_moves() { skipQuiets = true; }
 
 }  // namespace Stockfish

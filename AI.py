@@ -20,7 +20,7 @@ class QuietStockfish(Stockfish):
 
 
 if sys.platform == "win32":
-    stockfish_path = "stockfish_engine/Windows/stockfish-windows-x86-64-avx2.exe"
+    stockfish_path = "stockfish_engine/Windows/stockfish-windows-x86-64-sse41-popcnt"
 elif sys.platform == "darwin":
     stockfish_path = "stockfish_engine/MacOs/stockfish-macos-m1-apple-silicon"
 else:

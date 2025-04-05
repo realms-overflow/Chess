@@ -1,7 +1,7 @@
 [Stockfish](https://stockfishchess.org/) is a **free, open source, and strong UCI chess engine** derived from Glaurung 2.1 that analyzes chess positions and computes the optimal moves.
 
-Stockfish **does not include a graphical user interface** (GUI) that is required to display a chessboard and to make it easy to input moves. Several [Free GUIs](Download-and-usage#free) are developed independently from Stockfish and are available online. 
-**Read the documentation for your GUI** of choice for information about how to use Stockfish with it.
+Stockfish **does not include a graphical user interface** (GUI), which is needed to display a chessboard and to make it easy to input moves. Several [free GUIs](Download-and-usage#free) have been developed independently of Stockfish and are available online. 
+**Read the documentation for the GUI** of your choice to find out how to use it with Stockfish.
 
 ## Guides
 
