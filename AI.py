@@ -1,4 +1,4 @@
-import sys,subprocess
+import sys,subprocess,os
 
 from Game_settings import *
 from stockfish import Stockfish
@@ -21,7 +21,13 @@ class QuietStockfish(Stockfish):
 if sys.platform == "win32":
     stockfish_path = "stockfish_engine/Windows/stockfish-windows-x86-64-sse41-popcnt"
 elif sys.platform == "darwin":
-    stockfish_path = "stockfish_engine/MacOs/stockfish-macos-m1-apple-silicon"
+    if getattr(sys, 'frozen', False):  # Running in a PyInstaller bundle
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+
+    stockfish_path = os.path.join(base_path, 'stockfish_engine', 'MacOs', 'stockfish-macos-m1-apple-silicon')
+    #stockfish_path = "stockfish_engine/MacOs/stockfish-macos-m1-apple-silicon"
 else:
     stockfish_path = "stockfish_engine/Linux/stockfish-android-armv8"
 
