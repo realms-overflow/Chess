@@ -59,7 +59,6 @@ while running:
 
         does_not_change_2_square_Flag = False
         pygame.time.delay(500)
-        print(Piece.get_fen(turn))
         best_move = AI.get_the_best_move(Piece.get_fen(turn)) if turn == "black" else AI.get_the_best_move(Piece.mirror_fen(Piece.get_fen(turn)))
         AI_selected_piece_n_next_move = AI.get_the_piece_and_destination_location_by_move(best_move)
         AI_selected_piece = AI_selected_piece_n_next_move[0]
