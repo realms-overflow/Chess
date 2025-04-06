@@ -1,7 +1,7 @@
 from abc import abstractmethod
 import pygame
 import Game_settings
-
+from Game_settings import coordinates_locations
 
 
 class Piece:
@@ -183,6 +183,7 @@ class Piece:
     def get_fen(cls,turn):
         from King import King
         from Rook import Rook
+        from Pawn import Pawn
 
         SQUARE_SIZE = 75
 
@@ -257,8 +258,35 @@ class Piece:
             cls.castling_rights = cls.castling_rights.replace("k", "")
             cls.castling_rights = cls.castling_rights.replace("q", "")
 
+        # Possible en passant moves
+        en_passant_notation="-"
+        enemy_pawn_capturable=None
+        for piece in Piece.current_pieces_list:
+            if isinstance(piece,Pawn) and piece.just_moved_two_squares and piece.color==Game_settings.get_player_color():
+                enemy_pawn_capturable=piece
+                break
+            else:
+                enemy_pawn_capturable=None
 
-        fen = f"{fen_board} {turn_char} {cls.castling_rights} - 0 1"
+        # Update Moves
+        for piece in Piece.current_pieces_list:
+            piece.get_valid_moves()
+
+        if enemy_pawn_capturable:
+            for piece in Piece.current_pieces_list:
+                if isinstance(piece,Pawn) and piece.color!=Game_settings.get_player_color() and piece.en_passant_taken_piece==enemy_pawn_capturable:
+                    if Game_settings.get_player_color()=="white":
+                        coordinate = next((k for k, v in coordinates_locations.items() if v == piece.en_passant_move_location), None)
+                    else:
+                        coordinate = next(
+                            (k for k, v in Game_settings.reverse_coordinate_locations.items() if v == piece.en_passant_move_location), None)
+                    en_passant_notation=en_passant_notation.replace('-',coordinate.lower())
+
+
+
+
+
+        fen = f"{fen_board} {turn_char} {cls.castling_rights} {en_passant_notation} 0 1"
         return fen
 
     def get_fen_symbol(self):
@@ -297,6 +325,7 @@ class Piece:
         parts = fen.split()
         board_layout = parts[0]
         castling_rights = parts[2]
+        en_passant_notation=parts[3]
 
         # Split the board layout into rows
         rows = board_layout.split('/')
@@ -320,7 +349,7 @@ class Piece:
         new_board_layout = '/'.join(rows)
 
         # Reconstruct the new FEN
-        new_fen = f"{new_board_layout} w {castling_rights} - 0 1"
+        new_fen = f"{new_board_layout} w {castling_rights} {en_passant_notation} 0 1"
         return new_fen
 
     @staticmethod

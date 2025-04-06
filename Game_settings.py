@@ -77,6 +77,7 @@ def reverse_locations():
     ]
 
     return dict(zip(coordinates, locations1))
+reverse_coordinate_locations=reverse_locations()
 
 
 def show_checkmate_message(screen,winner):
