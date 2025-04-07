@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 
 # Constants
@@ -103,7 +105,7 @@ def show_menu(screen):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            quit()
+            sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if blue_button_rect.collidepoint(event.pos):
                 AI_difficulty=0
