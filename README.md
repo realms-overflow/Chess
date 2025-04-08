@@ -28,3 +28,6 @@ Download the latest version:
 
 👉 https://github.com/realms-overflow/Chess/releases/tag/v1.0.0
 
+## 📸 Credits
+Piece images and sound effects are sourced from Chess.com. All rights belong to their respective owners.
+Used here for educational and non-commercial purposes.
