@@ -30,7 +30,7 @@ Download the latest version:
 
 ---
 
-## 🕹️ Gameplay Preview
+## 🕹️ Gameplay Preview 
 
 ![Menu](Images/menu_screenshot.png)
 ![gameplay_footage](Images/gameplay_footage.gif)
