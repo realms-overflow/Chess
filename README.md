@@ -32,7 +32,7 @@ Download the latest version:
 
 ## 🕹️ Gameplay Preview
 
-[![Menu](Images/menu_screenshot.png)])
+![Menu](Images/menu_screenshot.png)
 
 ---
 
