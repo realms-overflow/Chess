@@ -1,4 +1,3 @@
-Readme
 # ♟️ Chess  Game 
 
 A single-player chess game built using “Pygame” for the graphical interface and “Stockfish” for AI decision-making. Battle against one of the strongest chess engines with full support for modern chess rules.
