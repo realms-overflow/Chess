@@ -37,7 +37,7 @@ Download the latest version:
 
 ---
 
-## 📸 Credits  
+## 📸 Credits 
 Piece images and sound effects are sourced from Chess.com. All rights belong to their respective owners.
 Used here for educational and non-commercial purposes. 
 
