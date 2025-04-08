@@ -1,3 +1,4 @@
+Readme
 # ♟️ Chess  Game 
 
 A single-player chess game built using “Pygame” for the graphical interface and “Stockfish” for AI decision-making. Battle against one of the strongest chess engines with full support for modern chess rules.
@@ -28,6 +29,9 @@ Download the latest version:
 
 👉 https://github.com/realms-overflow/Chess/releases/tag/v1.0.0
 
+---
+
 ## 📸 Credits
 Piece images and sound effects are sourced from Chess.com. All rights belong to their respective owners.
 Used here for educational and non-commercial purposes.
+
